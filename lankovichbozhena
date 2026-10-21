@@ -1,0 +1,198 @@
+//  ЗАДАНИЕ 1.  // 
+#include <iostream>
+using namespace std;
+int main() { setlocale(LC_ALL, "Russian"); // Для корректного вывода кириллицы в Windows
+double S;
+int n;
+
+cout << "Введите первоначальный вклад S (100..10000): ";
+cin >> S;
+cout << "Введите срок n (1..24) месяцев: ";
+cin >> n;
+
+// Проверка диапазонов (пункт 4 требований)
+if (S < 100 || S > 10000 || n < 1 || n > 24) {
+    cout << "Ошибка ввода" << endl;
+    return 0;
+}
+
+double balance = S;
+
+// Основной перебор через for
+for (int i = 1; i <= n; i++) {
+    balance = balance + (balance * 0.02); // Начисление 2%
+    balance = balance + 50;               // Добавление 50
+    
+    cout << "Баланс после " << i << "-го месяца: " << balance << endl;
+}
+
+// Чистый доход от процентов
+double netIncome = balance - S - (50.0 * n);
+
+cout << "\nИтоговый баланс: " << balance << endl;
+cout << "Чистый доход от процентов: " << netIncome << endl;
+
+return 0;
+}
+
+//  ЗАДАНИЕ 2.  // 
+#include <iostream>
+using namespace std;
+int main() { setlocale(LC_ALL, "Russian");
+int correctPin, inputPin;
+
+cout << "Задайте правильный PIN-код (1000..9999): ";
+cin >> correctPin;
+
+// Проверка диапазона
+if (correctPin < 1000 || correctPin > 9999) {
+    cout << "Ошибка ввода" << endl;
+    return 0;
+}
+
+int attempts = 3;
+bool isOpen = false;
+
+// Основной цикл через while
+while (attempts > 0) {
+    cout << "Введите PIN-код: ";
+    cin >> inputPin;
+
+    if (inputPin == correctPin) {
+        isOpen = true;
+        break; // Прекращаем ввод досрочно
+    } else {
+        attempts--;
+        if (attempts > 0) {
+            cout << "Неверный PIN. Осталось попыток: " << attempts << endl;
+        }
+    }
+}
+
+if (isOpen) {
+    cout << "Доступ открыт" << endl;
+} else {
+    cout << "Карта заблокирована" << endl;
+}
+
+return 0;
+}
+
+//  ЗАДАНИЕ 3.  // 
+#include <iostream>
+using namespace std;
+int main() { setlocale(LC_ALL, "Russian");
+double balance;
+cout << "Введите стартовый баланс B (0..10000): ";
+cin >> balance;
+
+// Проверка начального баланса
+if (balance < 0 || balance > 10000) {
+    cout << "Ошибка ввода" << endl;
+    return 0;
+}
+
+int choice;
+int depCount = 0; // Количество успешных пополнений
+int wdCount = 0;  // Количество успешных снятий
+
+// Основной цикл через do-while
+do {
+    cout << "\nМеню:" << endl;
+    cout << "1 - пополнить" << endl;
+    cout << "2 - снять" << endl;
+    cout << "3 - показать баланс" << endl;
+    cout << "0 - выход" << endl;
+    cout << "Выберите действие: ";
+    cin >> choice;
+
+    if (choice == 1) {
+        double amount;
+        cout << "Введите сумму для пополнения: ";
+        cin >> amount;
+        
+        // Отклоняем неподходящие суммы
+        if (amount > 0 && amount == (int)amount) { 
+            balance += amount;
+            depCount++;
+            cout << "Баланс пополнен." << endl;
+        } else {
+            cout << "Ошибка: сумма должна быть положительной и целой." << endl;
+        }
+    } 
+    else if (choice == 2) {
+        double amount;
+        cout << "Введите сумму для снятия: ";
+        cin >> amount;
+        
+        if (amount > 0 && amount == (int)amount) {
+            if (amount <= balance) {
+                balance -= amount;
+                wdCount++;
+                cout << "Средства сняты." << endl;
+            } else {
+                cout << "Ошибка: недостаточно средств." << endl;
+            }
+        } else {
+            cout << "Ошибка: сумма должна быть положительной и целой." << endl;
+        }
+    } 
+    else if (choice == 3) {
+        cout << "Текущий баланс: " << balance << endl;
+    } 
+    else if (choice != 0) {
+        cout << "Неверный пункт меню." << endl;
+    }
+
+} while (choice != 0);
+
+cout << "\nИтоговый баланс: " << balance << endl;
+cout << "Успешных пополнений: " << depCount << endl;
+cout << "Успешных снятий: " << wdCount << endl;
+
+return 0;
+}
+
+//  ЗАДАНИЕ 4.  //
+#include <iostream>
+using namespace std;
+int main() { setlocale(LC_ALL, "Russian");
+int n, m;
+
+cout << "Введите количество тарифных планов n (2..6): ";
+cin >> n;
+cout << "Введите число месяцев m (2..8): ";
+cin >> m;
+
+// Проверка диапазонов
+if (n < 2 || n > 6 || m < 2 || m > 8) {
+    cout << "Ошибка ввода" << endl;
+    return 0;
+}
+
+cout << "\nТаблица накопленных выплат:" << endl;
+
+// Обязательно вложенные циклы
+for (int i = 1; i <= n; i++) {
+    double rowAccumulator = 0; // Накопитель для каждой строки
+    cout << "План " << i << ": ";
+
+    for (int j = 1; j <= m; j++) {
+        double monthlyFee = 10 + 5 * i; // Ежемесячная плата
+        double currentMonthTotal = monthlyFee;
+
+        // Каждый третий месяц доп. списание 7
+        if (j % 3 == 0) {
+            currentMonthTotal += 7;
+        }
+
+        rowAccumulator += currentMonthTotal;
+        
+        // Выводим сумму с начала обслуживания по месяц j
+        cout << rowAccumulator << "\t"; 
+    }
+    cout << endl; // Переход на новую строку для следующего плана
+}
+
+return 0;
+}
